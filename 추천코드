@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>오늘의 책</title>
+</head>
+<body>
+  <h1>📚 오늘의 책 추천</h1>
+  <div id="book"></div>
+  <button onclick="recommendBook()">다른 책 보기</button>
+
+  <script>
+    const books = [
+      { title: "책1", author: "저자1", desc: "설명1" },
+      { title: "책2", author: "저자2", desc: "설명2" },
+      { title: "책3", author: "저자3", desc: "설명3" }
+    ];
+
+    function recommendBook() {
+      const randomIndex = Math.floor(Math.random() * books.length);
+      const book = books[randomIndex];
+      document.getElementById("book").innerHTML = `
+        <h2>${book.title}</h2>
+        <p><strong>저자:</strong> ${book.author}</p>
+        <p>${book.desc}</p>
+      `;
+    }
+
+    // 페이지 열자마자 한 권 추천
+    recommendBook();
+  </script>
+</body>
+</html>
+
