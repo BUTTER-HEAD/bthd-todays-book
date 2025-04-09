@@ -179,10 +179,12 @@
     }
 
     function saveAsImage() {
-      html2canvas(document.getElementById("book")).then(canvas => {
-        const today = new Date();
-        const dateStr = today.toISOString().split("T")[0];
-        const fileName = `${dateStr}_버메추.png`;
+      html2canvas(document.getElementById("book"), {
+  		useCORS: true
+	}).then(canvas => {
+  		const today = new Date();
+  		const dateStr = today.toISOString().split("T")[0];
+  		const fileName = `${dateStr}_버메추.png`;
 
         const link = document.createElement('a');
     	link.download = fileName;
