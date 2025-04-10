@@ -179,7 +179,7 @@
     }
 
     function saveAsImage() {
-      html2canvas(document.getElementById("book"), {
+      html2canvas(document.body, {
   		useCORS: true
 	}).then(canvas => {
   		const today = new Date();
