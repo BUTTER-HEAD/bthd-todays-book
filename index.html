@@ -7,6 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
+	  
+.screen-only {
+  display: block;
+}
+.share-only {
+  display: none;
+}
     body {
       font-family: 'Gowun Dodum', sans-serif;
       background-color: #fefbd4;
@@ -158,14 +165,17 @@
   const img = book.img ?? "";
   const category = book.category ?? "";
 
-  document.getElementById("book").innerHTML = `
-    <h2>${title}</h2>
-    <p style="margin-top: -10px; font-size: 0.9em; color: #666;">
-      ${author}${category ? ` | ${category}` : ""}
-    </p>
-    ${img ? `<img src="${img}" alt="책 표지">` : ""}
-    <p>${desc}</p>
-  `;
+document.getElementById("book").innerHTML = `
+  <h2>${book.title ?? ""}</h2>
+  <p class="book-meta">${book.author ?? ""}${book.category ? ` | ${book.category}` : ""}</p>
+
+  ${book.img ? `<img src="${book.img}" alt="책 표지" class="book-cover screen-only">` : ""}
+
+  <div class="desc-for-share share-only">${book.desc ?? ""}</div>
+
+  <p class="screen-only">${book.desc ?? ""}</p>
+`;
+
 }
 
     function toggleCategoryMenu(forceClose = null) {
@@ -177,18 +187,24 @@
       menu.style.display = (menu.style.display === "block") ? "none" : "block";
     }
 
-    function saveAsImage() {
-      html2canvas(document.body, {
-  		useCORS: true
-	}).then(canvas => {
-  		const today = new Date();
-  		const dateStr = today.toISOString().split("T")[0];
-  		const fileName = `${dateStr}_버메추.png`;
+function saveAsImage() {
+  document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
 
-        const link = document.createElement('a');
-    	link.download = fileName;
-    	link.href = canvas.toDataURL();
-    	link.click();
+  html2canvas(document.body, {
+    useCORS: true
+  }).then(canvas => {
+    const today = new Date();
+    const dateStr = today.toISOString().split("T")[0];
+    const fileName = `${dateStr}_버메추.png`;
+
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.href = canvas.toDataURL();
+    link.click();
+
+    document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
+    document.querySelectorAll('.share-only').forEach(el => el.style.display = 'none');
   });
 }
 
