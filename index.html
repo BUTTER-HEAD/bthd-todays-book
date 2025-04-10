@@ -161,12 +161,12 @@
     }
 
     function displayBook(book) {
-      document.getElementById("book").innerHTML = `
-        <h2>${book.title}</h2>
-        <p style="margin-top: -10px; font-size: 0.9em; color: #666;">${book.author} | ${book.category}</p>
-        <img src="${book.img}" alt="책 표지">
-        <p>${book.desc}</p>
-      `;
+	    document.getElementById("book").innerHTML = `
+     		<h2>${book.title}</h2>
+        	<p style="margin-top: -10px; font-size: 0.9em; color: #666;">${book.author} | ${book.category}</p>
+       		<img src="${book.img}" alt="책 표지">
+        	<p>${book.desc}</p>
+	 `;
     }
 
     function toggleCategoryMenu(forceClose = null) {
