@@ -149,27 +149,25 @@
       displayBook(books[randomIndex]);
     }
 
-    function recommendByCategory(category) {
-      const filteredBooks = books.filter(book => book.category === category);
-      if (filteredBooks.length > 0) {
-        const randomIndex = Math.floor(Math.random() * filteredBooks.length);
-        displayBook(filteredBooks[randomIndex]);
-        toggleCategoryMenu(false);
-      } else {
-        alert("해당 카테고리의 책이 없습니다.");
-      }
-    }
-
     function displayBook(book) {
  	 const proxiedImage = `https://bthdproxyserver.vercel.app/${book.img}`;
 	    
-	    document.getElementById("book").innerHTML = `
-     		<h2>${book.title}</h2>
-        	<p style="margin-top: -10px; font-size: 0.9em; color: #666;">${book.author} | ${book.category}</p>
-       		<img src="${book.img}" alt="책 표지">
-        	<p>${book.desc}</p>
-	 `;
-    }
+function displayBook(book) {
+  const title = book.title ?? "";
+  const author = book.author ?? "";
+  const desc = book.desc ?? "";
+  const img = book.img ?? "";
+  const category = book.category ?? "";
+
+  document.getElementById("book").innerHTML = `
+    <h2>${title}</h2>
+    <p style="margin-top: -10px; font-size: 0.9em; color: #666;">
+      ${author}${category ? ` | ${category}` : ""}
+    </p>
+    ${img ? `<img src="${img}" alt="책 표지">` : ""}
+    <p>${desc}</p>
+  `;
+}
 
     function toggleCategoryMenu(forceClose = null) {
       const menu = document.getElementById("categoryMenu");
