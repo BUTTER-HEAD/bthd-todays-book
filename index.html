@@ -179,8 +179,8 @@ document.getElementById("book").innerHTML = `
   <h2>${book.title ?? ""}</h2>
   <p class="book-meta">${book.author ?? ""}${book.category ? ` | ${book.category}` : ""}</p>
 
-  ${book.img ? `<img src="${book.img}" alt="책 표지" class="book-cover screen-only">` : ""}
-	 style="display: block; margin: 0 auto; border-radius: 12px; max-width: 60%; height: auto;">
+  ${book.img ? `<img src="${book.img}" alt="책 표지" class="book-cover screen-only">` : ""
+	 style="display: block; margin: 0 auto; border-radius: 12px; max-width: 60%; height: auto;">}
   
   <div class="desc-for-share share-only">${book.desc ?? ""}</div>
 
