@@ -213,16 +213,71 @@ function saveAsImage() {
   document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
 
+  const isMobile = window.innerWidth <= 500;
+
+  const bookBox = document.getElementById("book");
+  const titleEl = document.querySelector("h1");
+  const shareButtonEl = document.querySelector("button:last-of-type");
+
+  const titleRect = titleEl.getBoundingClientRect();
+  const buttonRect = shareButtonEl.getBoundingClientRect();
+  const bookRect = bookBox.getBoundingClientRect();
+
+  const captureTop = titleRect.top + window.scrollY - 50;
+  const captureBottom = buttonRect.bottom + window.scrollY + 50;
+  const captureHeight = captureBottom - captureTop;
+
+  const bookTop = bookRect.top + window.scrollY;
+  const bookLeft = bookRect.left + window.scrollX;
+  const bookCenterY = bookTop + bookRect.height / 2;
+  const bookCenterX = bookLeft + bookRect.width / 2;
+
+  const desiredCenterY = captureHeight / 2;
+  const desiredCenterX = 400;
+
+  const deltaY = desiredCenterY - (bookCenterY - captureTop);
+  const deltaX = desiredCenterX - bookCenterX;
+
+  const cropStartY = captureTop + deltaY;
+  const cropStartX = Math.max(0, bookCenterX - desiredCenterX);
+
   html2canvas(document.body, {
-    useCORS: true
+    useCORS: true,
+    backgroundColor: null,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: isMobile ? window.innerWidth : document.documentElement.scrollWidth,
+    windowHeight: isMobile ? window.innerHeight : document.documentElement.scrollHeight,
+    scale: window.devicePixelRatio || 2
   }).then(canvas => {
+    const croppedCanvas = document.createElement("canvas");
+    const ctx = croppedCanvas.getContext("2d");
+
+    const captureWidth = isMobile ? canvas.width : Math.min(canvas.width, 800);
+    const captureH = isMobile ? canvas.height : captureHeight;
+
+    croppedCanvas.width = captureWidth;
+    croppedCanvas.height = captureH;
+
+    ctx.drawImage(
+      canvas,
+      isMobile ? 0 : cropStartX,
+      isMobile ? 0 : cropStartY,
+      captureWidth,
+      captureH,
+      0,
+      0,
+      captureWidth,
+      captureH
+    );
+
     const today = new Date();
     const dateStr = today.toISOString().split("T")[0];
     const fileName = `${dateStr}_버메추.png`;
 
     const link = document.createElement('a');
     link.download = fileName;
-    link.href = canvas.toDataURL();
+    link.href = croppedCanvas.toDataURL();
     link.click();
 
     document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
