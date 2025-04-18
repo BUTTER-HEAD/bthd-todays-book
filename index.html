@@ -130,9 +130,20 @@
     .category-menu button:hover {
       background-color: #fefbd4;
     }
+
+	  
+    .logo-image {
+       display: block;
+       margin: 0 auto -15px;
+       max-height: 40px;
+       width: auto;
+       object-fit: contain;
+     }
+
   </style>
 </head>
 <body>
+  <img src="로고.png" alt="로고" class="logo-image">
   <h1>☆*: .｡. O 오늘의 독서메뉴 추천 o .｡.:*☆</h1>
   <div id="date"></div>
 
@@ -202,16 +213,71 @@ function saveAsImage() {
   document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
 
+  const isMobile = window.innerWidth <= 500;
+
+  const quoteBox = document.getElementById("quote-box");
+  const titleEl = document.querySelector("h1");
+  const shareButtonEl = document.querySelector("button:last-of-type");
+
+  const titleRect = titleEl.getBoundingClientRect();
+  const buttonRect = shareButtonEl.getBoundingClientRect();
+  const quoteRect = quoteBox.getBoundingClientRect();
+
+  const captureTop = titleRect.top + window.scrollY - 50;
+  const captureBottom = buttonRect.bottom + window.scrollY + 50;
+  const captureHeight = captureBottom - captureTop;
+
+  const quoteTop = quoteRect.top + window.scrollY;
+  const quoteLeft = quoteRect.left + window.scrollX;
+  const quoteCenterY = quoteTop + quoteRect.height / 2;
+  const quoteCenterX = quoteLeft + quoteRect.width / 2;
+
+  const desiredCenterY = captureHeight / 2;
+  const desiredCenterX = 400;
+
+  const deltaY = desiredCenterY - (quoteCenterY - captureTop);
+  const deltaX = desiredCenterX - quoteCenterX;
+
+  const cropStartY = captureTop + deltaY;
+  const cropStartX = Math.max(0, quoteCenterX - desiredCenterX);
+
   html2canvas(document.body, {
-    useCORS: true
+    useCORS: true,
+    backgroundColor: null,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: isMobile ? window.innerWidth : document.documentElement.scrollWidth,
+    windowHeight: isMobile ? window.innerHeight : document.documentElement.scrollHeight,
+    scale: window.devicePixelRatio || 2
   }).then(canvas => {
+    const croppedCanvas = document.createElement("canvas");
+    const ctx = croppedCanvas.getContext("2d");
+
+    const captureWidth = isMobile ? canvas.width : Math.min(canvas.width, 800);
+    const captureH = isMobile ? canvas.height : captureHeight;
+
+    croppedCanvas.width = captureWidth;
+    croppedCanvas.height = captureH;
+
+    ctx.drawImage(
+      canvas,
+      isMobile ? 0 : cropStartX,
+      isMobile ? 0 : cropStartY,
+      captureWidth,
+      captureH,
+      0,
+      0,
+      captureWidth,
+      captureH
+    );
+
     const today = new Date();
     const dateStr = today.toISOString().split("T")[0];
     const fileName = `${dateStr}_버메추.png`;
 
     const link = document.createElement('a');
     link.download = fileName;
-    link.href = canvas.toDataURL();
+    link.href = croppedCanvas.toDataURL();
     link.click();
 
     document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
@@ -234,7 +300,6 @@ function saveAsImage() {
       }
     }
 
-    // 오늘 날짜 출력
     const today = new Date();
     const formattedDate = today.toLocaleDateString('ko-KR', {
       year: 'numeric',
