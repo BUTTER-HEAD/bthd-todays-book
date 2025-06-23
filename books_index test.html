@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>◌( 버메추 )◌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+	  
+.screen-only {
+  display: block;
+}
+.share-only {
+  display: none;
+}
+    body {
+      font-family: 'Gowun Dodum', sans-serif;
+      background-color: #fefbd4;
+      padding: 40px 20px;
+      text-align: center;
+      color: #333;
+    }
+
+    h1 {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    #date {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 0.95em;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    #book {
+      background-color: #f1f5da;
+      border-radius: 20px;
+      border: 1px solid #000;
+      padding: 25px;
+      margin: 0 auto 30px;
+	width: 90%;
+	max-width: 500px;
+  	box-sizing: border-box;
+    }
+
+    #book img {
+      display: block;
+      margin: 0 auto;
+      width: 60%;
+      height: auto;
+      border-radius: 12px;
+    }
+
+    #book-cover {
+       display: block;
+       margin: 0 auto;
+       margin-top: 20px;
+       margin-bottom: 20px;
+       border-radius: 12px;
+       max-width: 60%;
+       height: auto;
+    }
+
+    #book h2 {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 1.3em;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    #book p {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 0.95em;
+      margin: 6px 0;
+      line-height: 1.5;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    button {
+      background-color: #f1f5da;
+      color: #333;
+      border: 1px solid #000;
+      padding: 10px 16px;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 1em;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #e4e9c4;
+    }
+
+    .category-menu {
+      display: none;
+      position: absolute;
+      top: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ffffff;
+      border: 1px solid #000;
+      border-radius: 10px;
+      padding: 8px;
+      z-index: 1;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .category-menu button {
+      display: block;
+      background: none;
+      border: none;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 1em;
+      padding: 6px 12px;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+    }
+
+    .category-menu button:hover {
+      background-color: #fefbd4;
+    }
+
+	  
+    .logo-image {
+       display: block;
+       margin: 0 auto -15px;
+       max-height: 40px;
+       width: auto;
+       object-fit: contain;
+     }
+
+  </style>
+</head>
+<body>
+  <img src="로고.png" alt="로고" class="logo-image">
+  <h1>☆*: .｡. O 오늘의 독서메뉴 추천 o .｡.:*☆</h1>
+  <div id="date"></div>
+
+  <div id="book"></div>
+
+  <div class="button-group">
+    <button onclick="recommendBook()">다른 책 추천받기</button>
+    <button onclick="saveAsImage()">저장하기</button>
+    <button onclick="shareBook()">공유하기</button>
+  </div>
+
+  <script>
+    let books = [];
+
+    fetch('books.json')
+      .then(response => response.json())
+      .then(data => {
+        books = data;
+        recommendBook();
+      })
+      .catch(error => {
+        console.error("책 데이터를 불러오지 못했습니다:", error);
+      });
+
+    function recommendBook() {
+      const randomIndex = Math.floor(Math.random() * books.length);
+      displayBook(books[randomIndex]);
+    }
+
+    function displayBook(book) {
+ 	 const proxiedImage = `https://bthdproxyserver.vercel.app/${book.img}`;
+	    
+  const title = book.title ?? "";
+  const author = book.author ?? "";
+  const desc = book.desc ?? "";
+  const img = book.img ?? "";
+  const category = book.category ?? "";
+
+document.getElementById("book").innerHTML = `
+  <h2>${book.title ?? ""}</h2>
+  <p class="book-meta">${book.author ?? ""}${book.category ? ` | ${book.category}` : ""}</p>
+
+  ${book.img ? `<img src="${book.img}" alt="책 표지" class="book-cover screen-only">` : ""}
+  
+  <div class="desc-for-share share-only">${book.desc ?? ""}</div>
+
+  <p class="screen-only">${book.desc ?? ""}</p>
+`;
+
+}
+
+    function toggleCategoryMenu(forceClose = null) {
+      const menu = document.getElementById("categoryMenu");
+      if (forceClose === false) {
+        menu.style.display = "none";
+        return;
+      }
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+function saveAsImage() {
+  document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
+
+  const isMobile = window.innerWidth <= 500;
+
+  const bookBox = document.getElementById("book");
+  const titleEl = document.querySelector("h1");
+  const shareButtonEl = document.querySelector("button:last-of-type");
+
+  const titleRect = titleEl.getBoundingClientRect();
+  const buttonRect = shareButtonEl.getBoundingClientRect();
+  const bookRect = bookBox.getBoundingClientRect();
+
+  const captureTop = titleRect.top + window.scrollY - 50;
+  const captureBottom = buttonRect.bottom + window.scrollY + 50;
+  const captureHeight = captureBottom - captureTop;
+
+  const bookTop = bookRect.top + window.scrollY;
+  const bookLeft = bookRect.left + window.scrollX;
+  const bookCenterY = bookTop + bookRect.height / 2;
+  const bookCenterX = bookLeft + bookRect.width / 2;
+
+  const desiredCenterY = captureHeight / 2;
+  const desiredCenterX = 400;
+
+  const deltaY = desiredCenterY - (bookCenterY - captureTop);
+  const deltaX = desiredCenterX - bookCenterX;
+
+  const cropStartY = captureTop + deltaY;
+  const cropStartX = Math.max(0, bookCenterX - desiredCenterX);
+
+  html2canvas(document.body, {
+    useCORS: true,
+    backgroundColor: null,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: isMobile ? window.innerWidth : document.documentElement.scrollWidth,
+    windowHeight: isMobile ? window.innerHeight : document.documentElement.scrollHeight,
+    scale: window.devicePixelRatio || 2
+  }).then(canvas => {
+    const croppedCanvas = document.createElement("canvas");
+    const ctx = croppedCanvas.getContext("2d");
+
+    const captureWidth = isMobile ? canvas.width : Math.min(canvas.width, 800);
+    const captureH = isMobile ? canvas.height : captureHeight;
+
+    croppedCanvas.width = captureWidth;
+    croppedCanvas.height = captureH;
+
+    ctx.drawImage(
+      canvas,
+      isMobile ? 0 : cropStartX,
+      isMobile ? 0 : cropStartY,
+      captureWidth,
+      captureH,
+      0,
+      0,
+      captureWidth,
+      captureH
+    );
+
+    const today = new Date();
+    const dateStr = today.toISOString().split("T")[0];
+    const fileName = `${dateStr}_버메추.png`;
+
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.href = croppedCanvas.toDataURL();
+    link.click();
+
+    document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
+    document.querySelectorAll('.share-only').forEach(el => el.style.display = 'none');
+  });
+}
+
+    function shareBook() {
+      const bookText = document.getElementById("book").innerText;
+	const frontText = "◌( 버터헤드의 오늘의 독서메뉴 추천 )◌";
+      	const backText = "https://butter-head.imweb.me/37";
+
+  const finalText = `${frontText}${bookText}${backText}`;
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(err => console.error("공유 실패:", err));
+      } else {
+        alert("이 브라우저는 공유 기능을 지원하지 않습니다.");
+      }
+    }
+
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long'
+    });
+    document.getElementById("date").innerText = formattedDate;
+  </script>
+</body>
+</html>
