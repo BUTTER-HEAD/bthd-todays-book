@@ -283,11 +283,11 @@ function saveAsImage() {
 }
 
     function shareBook() {
-      const bookText = document.getElementById("book").innerText;
-  const shareData = {
 	const frontText = "◌( 버터헤드의 오늘의 독서메뉴 추천 )◌";
-    text: bookText,
-    url: "https://butter-head.imweb.me/37"
+      const bookText = document.getElementById("book").innerText;
+  	const shareData = {
+    		text: bookText,
+    		url: "https://butter-head.imweb.me/37"
   };
 
       if (navigator.share) {
