@@ -154,7 +154,7 @@
   <div class="button-group">
     <button onclick="recommendBook()">다른 책 추천받기</button>
     <button onclick="saveAsImage()">저장하기</button>
-    <button onclick="shareBook()">공유하기</button>
+    <button onclick="copyLink()">복사하기</button>
   </div>
 
   <script>
@@ -282,22 +282,24 @@ function saveAsImage() {
   });
 }
 
-    function shareBook() {
-      const bookText = document.getElementById("book").innerText;
-	const shareData = {
-  		title: "◌( 버메추 )◌",
-  	text: `◌( 버터헤드의 오늘의 독서메뉴 추천 )◌
+function copyLink() {
+  const bookText = document.getElementById("book").innerText;
 
-	${bookText}`,
-  	url: "https://butter-head.imweb.me/37"
-  };
+  const textToCopy = `◌( 버터헤드의 오늘의 독서메뉴 추천 )◌
 
-      if (navigator.share) {
-        navigator.share(shareData).catch(err => console.error("공유 실패:", err));
-      } else {
-        alert("이 브라우저는 공유 기능을 지원하지 않습니다.");
-      }
-    }
+${bookText}
+
+https://butter-head.imweb.me/37`;
+
+  const dummy = document.createElement("textarea");
+  dummy.value = textToCopy;
+  document.body.appendChild(dummy);
+  dummy.select();
+  document.execCommand("copy");
+  document.body.removeChild(dummy);
+
+  alert("텍스트가 복사되었습니다!");
+}
 	  
     const today = new Date();
     const formattedDate = today.toLocaleDateString('ko-KR', {
