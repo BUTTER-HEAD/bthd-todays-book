@@ -284,10 +284,11 @@ function saveAsImage() {
 
     function shareBook() {
       const bookText = document.getElementById("book").innerText;
+  const shareData = {
 	const frontText = "◌( 버터헤드의 오늘의 독서메뉴 추천 )◌";
-      	const backText = "https://butter-head.imweb.me/37";
-
-  const finalText = `${frontText}${bookText}${backText}`;
+    text: bookText,
+    url: "https://butter-head.imweb.me/37"
+  };
 
       if (navigator.share) {
         navigator.share(shareData).catch(err => console.error("공유 실패:", err));
@@ -295,7 +296,7 @@ function saveAsImage() {
         alert("이 브라우저는 공유 기능을 지원하지 않습니다.");
       }
     }
-
+	  
     const today = new Date();
     const formattedDate = today.toLocaleDateString('ko-KR', {
       year: 'numeric',
