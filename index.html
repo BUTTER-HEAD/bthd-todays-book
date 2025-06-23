@@ -286,8 +286,11 @@ function saveAsImage() {
 	const frontText = "◌( 버터헤드의 오늘의 독서메뉴 추천 )◌";
       const bookText = document.getElementById("book").innerText;
   	const shareData = {
+		title: "◌( 버메추 )◌",
     		text: bookText,
     		url: "https://butter-head.imweb.me/37"
+
+  const finalText = `${frontText}${bookText}`;
   };
 
       if (navigator.share) {
