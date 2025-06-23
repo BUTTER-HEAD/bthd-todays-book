@@ -207,7 +207,6 @@ document.getElementById("book").innerHTML = `
     }
 
 function saveAsImage() {
-  // PC 감지
   const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
 
   if (!isMobile) {
@@ -215,7 +214,6 @@ function saveAsImage() {
     return;
   }
 
-  // 공유용 요소 표시
   document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
 
@@ -257,20 +255,6 @@ function saveAsImage() {
       captureHeight
     );
 
-    const today = new Date();
-    const dateStr = today.toISOString().split("T")[0];
-    const fileName = `${dateStr}_버메추.png`;
-
-    const link = document.createElement('a');
-    link.download = fileName;
-    link.href = croppedCanvas.toDataURL();
-    link.click();
-
-    // 화면 복원
-    document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
-    document.querySelectorAll('.share-only').forEach(el => el.style.display = 'none');
-  });
-}
     const today = new Date();
     const dateStr = today.toISOString().split("T")[0];
     const fileName = `${dateStr}_버메추.png`;
