@@ -220,6 +220,9 @@ function saveAsImage() {
   document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
 
   const captureElement = document.getElementById("capture-area");
+	const rect = captureElement.getBoundingClientRect();
+const top = rect.top + window.scrollY - 20;
+const height = rect.height + 40;
 
 html2canvas(captureElement, {
     useCORS: true,
