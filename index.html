@@ -151,6 +151,13 @@
 
   <div id="book"></div>
 
+	<div id="capture-area">
+  <img src="로고.png" ... class="logo-image share-only">
+  <h1>...</h1>
+  <p class="date">...</p>
+  <div id="book">...</div>
+</div>
+
   <div class="button-group">
     <button onclick="recommendBook()">다른 책 추천받기</button>
     <button onclick="saveAsImage()">저장하기</button>
@@ -217,59 +224,27 @@ function saveAsImage() {
   document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
 
-  const h1El = document.querySelector("h1");
-  const bookEl = document.getElementById("book");
+  const captureElement = document.getElementById("capture-area");
 
-  const h1Rect = h1El.getBoundingClientRect();
-  const bookRect = bookEl.getBoundingClientRect();
-
-  const captureTop = h1Rect.top + window.scrollY;
-  const captureBottom = bookRect.bottom + window.scrollY;
-  const captureHeight = captureBottom - captureTop;
-
-  html2canvas(document.body, {
+  html2canvas(captureElement, {
     useCORS: true,
     backgroundColor: null,
-    scrollX: 0,
-    scrollY: 0,
-    windowWidth: document.documentElement.scrollWidth,
-    windowHeight: document.documentElement.scrollHeight,
     scale: window.devicePixelRatio || 2
   }).then(canvas => {
-    const croppedCanvas = document.createElement("canvas");
-    const ctx = croppedCanvas.getContext("2d");
-
-    const captureWidth = canvas.width;
-
-    croppedCanvas.width = captureWidth;
-    croppedCanvas.height = captureHeight;
-
-    ctx.drawImage(
-      canvas,
-      0,
-      captureTop,
-      captureWidth,
-      captureHeight,
-      0,
-      0,
-      captureWidth,
-      captureHeight
-    );
-
+    const link = document.createElement('a');
     const today = new Date();
     const dateStr = today.toISOString().split("T")[0];
     const fileName = `${dateStr}_버메추.png`;
 
-    const link = document.createElement('a');
     link.download = fileName;
-    link.href = croppedCanvas.toDataURL();
+    link.href = canvas.toDataURL();
     link.click();
 
     document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
     document.querySelectorAll('.share-only').forEach(el => el.style.display = 'none');
   });
 }
-
+	  
 function copyLink() {
   const bookText = document.getElementById("book").innerText;
 
