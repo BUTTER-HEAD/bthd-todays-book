@@ -29,6 +29,12 @@
       margin-bottom: 10px;
     }
 
+@media (max-width: 500px) {
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
     #date {
       font-family: 'Gowun Dodum', sans-serif;
       font-size: 0.95em;
@@ -219,8 +225,8 @@ function saveAsImage() {
   document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.share-only').forEach(el => el.style.display = 'block');
 
-  const captureElement = document.getElementById("capture-area");
-	const rect = captureElement.getBoundingClientRect();
+const captureElement = document.getElementById("capture-area");
+const rect = captureElement.getBoundingClientRect();
 const top = rect.top + window.scrollY - 20;
 const height = rect.height + 40;
 
