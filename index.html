@@ -221,9 +221,9 @@ function saveAsImage() {
 
   const captureElement = document.getElementById("capture-area");
 
-  html2canvas(captureElement, {
+html2canvas(captureElement, {
     useCORS: true,
-    backgroundColor: null,
+    backgroundColor: "#fefbd4",
     scale: window.devicePixelRatio || 2
   }).then(canvas => {
     const link = document.createElement('a');
