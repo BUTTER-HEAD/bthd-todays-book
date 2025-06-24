@@ -220,11 +220,12 @@ function saveAsImage() {
   const h1El = document.querySelector("h1");
   const bookEl = document.getElementById("book");
 
-  const h1Top = h1El.offsetTop;
-  const captureTop = h1Top;
+  const h1Rect = h1El.getBoundingClientRect();
+  const bookRect = bookEl.getBoundingClientRect();
 
-  const bookBottom = bookEl.offsetTop + bookEl.offsetHeight;
-  const captureHeight = bookBottom - captureTop;
+  const captureTop = h1Rect.top + window.scrollY;
+  const captureBottom = bookRect.bottom + window.scrollY;
+  const captureHeight = captureBottom - captureTop;
 
   html2canvas(document.body, {
     useCORS: true,
